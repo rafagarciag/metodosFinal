@@ -9,11 +9,14 @@ public class Simulacion{
 	//Variable que contendra el tipo de broker
 	static String broker = "";
 	
+	//Arreglo de procesadores a utilizar
+	static Procesador [] procesadores; 
+	
 	//Para seleccionar el broker a utilizar
 	private static void menuBroker(){
 		System.out.println("===============================================================");
 		System.out.println("Seleccione el número de opción para utilizar como corredor");
-		System.out.println("tareas ('broker')");
+		System.out.println("de tareas ('broker')");
 		System.out.println("1. ROUNDROBIN");
 		System.out.println("2. LIST");
 		System.out.println("3. PARETOFRACTAL");
@@ -36,6 +39,23 @@ public class Simulacion{
 				System.out.println("Opcion invlálida, seleccione un número del 1 al 3");
 				menuBroker();
 		}
+		
+		System.out.println("\n===============================================================");
+		System.out.println("Ingrese el número de procesadores a utilizar (minimo 1)");
+		System.out.println("===============================================================");
+		
+		opcion = scan.nextInt();
+		if(opcion>=1){
+			procesadores = new Procesador[opcion];
+		}else{
+			System.out.println("Ingrese  un número de procesadores mayor o igual a 1");
+			menuBroker();
+		}
+	}
+	
+	//Algorito corredor de tareas
+	private static void listBroker(Tarea tarea){
+		
 	}
 	
 	public static void main(String[] args) { 
