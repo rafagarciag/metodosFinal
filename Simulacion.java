@@ -96,7 +96,7 @@ public class Simulacion{
                 //Llama broker enviandole tarea
                 
             }
-
+            
             // it's a departure
             else {
                 double wait = nextDeparture - q.dequeue();
