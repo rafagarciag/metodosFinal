@@ -1,16 +1,18 @@
 import java.io.PrintWriter;
 import java.util.Scanner;
+import java.util.Random;
 
 public class Simulacion{
 
+
 	//Numero de iteraciones para la simulacion
-	final static int ITERACIONES = 1000000;
+	final static int ITERACIONES = 1000;
 	
 	//Variable que contendra el tipo de broker
-	static String broker = "";
+	static Broker broker = null;
 	
 	//Arreglo de procesadores a utilizar
-	static Procesador [] procesadores; 
+	public static Procesador [] procesadores; 
 	
 	//Para seleccionar el broker a utilizar
 	private static void menuBroker(){
@@ -27,13 +29,13 @@ public class Simulacion{
 		
 		switch(opcion){
 			case 1:
-				broker="roundrobin";
+				broker=new RoundRobin();
 				break;
 			case 2:
-				broker="list";
+				broker=new List();
 				break;
 			case 3:
-				broker="pareto";
+				broker=new Pareto();
 				break;
 			default:
 				System.out.println("Opcion invlálida, seleccione un número del 1 al 3");
@@ -47,7 +49,7 @@ public class Simulacion{
 		opcion = scan.nextInt();
 		if(opcion>=1){
 			procesadores = new Procesador[opcion];
-			for(int i=0; i<opcion;i++);{
+			for(int i=0; i<opcion; i++){
 			    procesadores[i] = new Procesador();
 			}
 		}
@@ -56,55 +58,83 @@ public class Simulacion{
 			menuBroker();
 		}
 	}
-	
-	//Algorito corredor de tareas
-	private static void listBroker(Tarea tarea){
-		
-	}
+
 	
 	public static void main(String[] args) {
-	
-	    int contador = 0;
 	    
-        double lambda = Double.parseDouble(args[0]);  // arrival rate
-        double mu     = Double.parseDouble(args[1]);  // service rate
+	    menuBroker();
+	    
+	    Random random = new Random();
+	    int procMenorNA = 0;
+	    int procMenorND = 0;
+	    
+		double lambda = 0.027383;
+        double mu = 0.05;
+        int numProcesadores = procesadores.length;
 
         double menorNextArrival = Double.POSITIVE_INFINITY;
         double menorNextDeparture = Double.POSITIVE_INFINITY;
 
-        menuBroker();
-
-        //Aqui se debe crear el broker
-
-        // simulate an M/M/1 queue
-        while (contador < ITERACIONES) {
-            //Llamar al broker          
+        //Inicia simulacion 
+        for (int contador=0; contador < ITERACIONES; contador++) {       
             
-            // it's an arrival
-            
-            for(int i=0; i<procesadores.length; i++){
-                if (procesadores[i].getNextArrival < menorNextArrival)
-                    menorNextArrival = procesadores[i].getNextArrival;
-                if (procesadores[i].getNextDeparture < menorNextDeparture)
-                    menorNexxtDeparture = procesadores[i].getNextDeparture
-            }
-            
-            if (nextArrival <= nextDeparture) {
-                if (q.isEmpty()) nextDeparture = nextArrival + StdRandom.exp(mu);
-                q.enqueue(nextArrival);
-                nextArrival += StdRandom.exp(lambda);
+            System.out.println("Iteracion "+ contador);
+            for(int i=0; i<numProcesadores; i++){
+                if (procesadores[i].getNextArrival() < menorNextArrival){
+                    menorNextArrival = procesadores[i].getNextArrival();
+                    procMenorNA = i;
+				}
+                if (procesadores[i].getNextDeparture() < menorNextDeparture){
+                    menorNextDeparture = procesadores[i].getNextDeparture();
+					procMenorND = i;
+				}
             }
 
+            // Llegada al sistema
+            if (menorNextArrival <= menorNextDeparture) {
+                Tarea t = new Tarea(contador, random.nextInt(numProcesadores), StdRandom.exp(lambda));
+                
+                
+                //System.out.println("Tarea asignada con ID " + t.getId());
+                
+                //Verificar que se cuenta con el numero de procesadores necesarios
+                //para atender la tarea
+                if(t.getNum()<=numProcesadores){
+                	//Asignar tarea a un procesador
+                	broker.asignaTarea(t);
+                }
+                else{
+                	
+                }
+                
+                
+                
+            }
+<<<<<<< HEAD
+            
             // it's a departure
+=======
+			
+			
+            // Salida del sistema
+>>>>>>> cd74cd847f97c99727e469c37031bcfb5e022846
             else {
-                double wait = nextDeparture - q.dequeue();
-                StdOut.printf("Wait = %6.2f, queue size = %d\n", wait, q.size());
-                if (q.isEmpty()) nextDeparture = Double.POSITIVE_INFINITY;
-                else             nextDeparture += StdRandom.exp(mu);
+                double wait = menorNextDeparture - procesadores[procMenorND].popTarea().getArrival();
+                //StdOut.printf("Wait = %6.2f, queue size = %d\n", wait, q.size());
+                if (procesadores[procMenorND].isEmpty()){
+                	procesadores[procMenorND].setNextDeparture(Double.POSITIVE_INFINITY);
+                }
+                else{
+                	procesadores[procMenorND].setNextDeparture(procesadores[procMenorND].getNextDeparture() + StdRandom.exp(mu) );
+                }
                 
             }
             
-            contador++;
+            for(int i = 0; i<numProcesadores; i++){
+				System.out.println("Procesador " + i);
+				System.out.println("\tTamaño de fila " + procesadores[i].queueSize());
+			}
+
         }
 
     }

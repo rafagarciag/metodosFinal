@@ -4,26 +4,24 @@ public class Procesador{
     
     private double nextArrival, nextDeparture;
     
-	Queue<Double> q;
+	Queue<Tarea> q;
     
 	public Procesador(){
 		ocupado = false;
-		q = new Queue<Double>();
+		q = new Queue<Tarea>();
 		nextArrival = Double.POSITIVE_INFINITY;
 		nextDeparture = Double.POSITIVE_INFINITY;
     }
      
-    public void pushTarea(Double t){
-    	if (q.isEmpty()) nextDeparture = t + StdRandom.exp(mu);
-            q.enqueue(t);
-            nextArrival += StdRandom.exp(lambda);    
-    }
+    public void pushTarea(Tarea t){
+    	q.enqueue(t);
+	}
      
-    public double peekTarea(){    
-    	return q.peek();    
+    public Tarea peekTarea(){    
+    	return q.peek();   
     }
     
-    public double popTarea(){
+    public Tarea popTarea(){
     	return q.dequeue();
     }
      
