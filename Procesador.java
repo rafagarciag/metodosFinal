@@ -2,7 +2,7 @@ public class Procesador{
 
 	private boolean ocupado;
     
-    private double nextArrival, nextDeparture
+    private double nextArrival, nextDeparture;
     
 	Queue<Double> q;
     
@@ -39,20 +39,20 @@ public class Procesador{
 	
 	
 	
-	public void setNextArrival(boolean nextArrival){      
+	public void setNextArrival(double nextArrival){      
 		this.nextArrival = nextArrival;     
 	}
 	
-	public boolean getNextArrival(){		
+	public double getNextArrival(){		
 		return this.nextArrival;
 	}
 	
 	
-	public void setNextDeparture(boolean nextDeparture){
+	public void setNextDeparture(double nextDeparture){
 		this.nextDeparture = nextDeparture;
 	}
 	
-	public boolean getNextDeparture(){
-		return this.ocupado;
+	public double getNextDeparture(){
+		return this.nextDeparture;
 	}	
 }
