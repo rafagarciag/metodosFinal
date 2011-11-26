@@ -9,10 +9,14 @@ public class Procesador{
 	public Procesador(){
 		ocupado = false;
 		q = new Queue<Double>();
+		nextArrival = Double.POSITIVE_INFINITY;
+		nextDeparture = Double.POSITIVE_INFINITY;
     }
      
     public void pushTarea(Double t){
-    	q.enqueue(t);    
+    	if (q.isEmpty()) nextDeparture = t + StdRandom.exp(mu);
+            q.enqueue(t);
+            nextArrival += StdRandom.exp(lambda);    
     }
      
     public double peekTarea(){    
@@ -25,6 +29,10 @@ public class Procesador{
      
     public boolean isEmpty(){
     	return q.isEmpty();
+    }
+    
+    public int queueSize(){
+    	return q.size();
     }
    
    

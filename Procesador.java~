@@ -26,6 +26,10 @@ public class Procesador{
     public boolean isEmpty(){
     	return q.isEmpty();
     }
+    
+    public int queueSize(){
+    	return q.size();
+    }
    
    
    
@@ -53,6 +57,6 @@ public class Procesador{
 	}
 	
 	public double getNextDeparture(){
-		return this.ocupado;
+		return this.nextDeparture;
 	}	
 }

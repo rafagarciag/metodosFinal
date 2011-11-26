@@ -3,9 +3,6 @@ import java.util.Scanner;
 
 public class Simulacion{
 
-    public static double lambda
-    public static double 
-
 	//Numero de iteraciones para la simulacion
 	final static int ITERACIONES = 1000000;
 	
@@ -13,7 +10,7 @@ public class Simulacion{
 	static String broker = "";
 	
 	//Arreglo de procesadores a utilizar
-	public static Procesador [] procesadores; 
+	static Procesador [] procesadores; 
 	
 	//Para seleccionar el broker a utilizar
 	private static void menuBroker(){
@@ -69,8 +66,8 @@ public class Simulacion{
 	
 	    int contador = 0;
 	    
-        lambda = Double.parseDouble(args[0]);  // arrival rate
-        mu     = Double.parseDouble(args[1]);  // service rate
+        double lambda = Double.parseDouble(args[0]);  // arrival rate
+        double mu     = Double.parseDouble(args[1]);  // service rate
 
         double menorNextArrival = Double.POSITIVE_INFINITY;
         double menorNextDeparture = Double.POSITIVE_INFINITY;
@@ -80,21 +77,22 @@ public class Simulacion{
         //Aqui se debe crear el broker
 
         // simulate an M/M/1 queue
-        while (contador < ITERACIONES) {             
+        while (contador < ITERACIONES) {
+            //Llamar al broker          
             
+            // it's an arrival
             
             for(int i=0; i<procesadores.length; i++){
                 if (procesadores[i].getNextArrival < menorNextArrival)
                     menorNextArrival = procesadores[i].getNextArrival;
                 if (procesadores[i].getNextDeparture < menorNextDeparture)
-                    menorNextDeparture = procesadores[i].getNextDeparture;
+                    menorNexxtDeparture = procesadores[i].getNextDeparture
             }
             
-            // it's an arrival
-            if (menorNextArrival <= menorNextDeparture) {
-                Tarea t = new Tarea(cont, Math.Random.nextInt(4));
-                //Llama broker enviandole tarea
-                
+            if (nextArrival <= nextDeparture) {
+                if (q.isEmpty()) nextDeparture = nextArrival + StdRandom.exp(mu);
+                q.enqueue(nextArrival);
+                nextArrival += StdRandom.exp(lambda);
             }
 
             // it's a departure
