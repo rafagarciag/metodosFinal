@@ -77,13 +77,13 @@ public class Simulacion{
 	    
         int numProcesadores = procesadores.length;
         
-
+		NextArrival=StdRandom.exp(lambda);
         //Inicia simulacion 
         for (int contador=0; contador < ITERACIONES; contador++) {       
            	System.out.println("Step: "+ contador +"//////////////////////////////////////////////");
             scan.nextInt();
             
-            NextArrival=StdRandom.exp(lambda);
+            
             NextDeparture = Double.POSITIVE_INFINITY;
             for(int i=0; i<numProcesadores; i++){
             	System.out.println("nextDep del xcpu: "+procesadores[i].getNextDeparture());
@@ -109,7 +109,8 @@ public class Simulacion{
 
                 	System.out.println("Tarea excede num de proc.");
                 		
-                }              
+                }
+                NextArrival=StdRandom.exp(lambda);
             }			
 
 			
@@ -119,23 +120,32 @@ public class Simulacion{
             	double wait=9999999;
             	if(procesadores[procMenorND].peekTarea().getNum()>1){
             		int id=procesadores[procMenorND].peekTarea().getId();
-            		int tareasListas=1;
+            		int tareasListas=0;
             		for(int i=0;i<procesadores.length;i++){
-            			if(procesadores[i].peekTarea().getId()==id)
+            			if(!procesadores[i].isEmpty()){
+            				if(procesadores[i].peekTarea().getId()==id)
             				tareasListas++;
+            			}   			
             		}
             		if(tareasListas>=procesadores[procMenorND].peekTarea().getNum()){
-            		
-            		
+            			for(int i=0;i<procesadores.length;i++){
+            				if(!procesadores[i].isEmpty()){
+            					if(procesadores[i].peekTarea().getId()==id){
+            						procesadores[i].popTarea();
+            						procesadores[i].setNextDeparture(Double.POSITIVE_INFINITY);
+            					}
+            				}
+            			}
+            			System.out.println("Trono muchas tareas");
             		}
             		else{
-            			System.out.println("Esperando a mis compañeritos :3"+id);
+            			System.out.println("$$$$$$$$$$$$$$$$$$$$$Esperando a mis compañeritos :3"+id);
             			procesadores[procMenorND].setNextDeparture(Double.POSITIVE_INFINITY);
             		}
-            	
-            	
             	}else{
+            		
             		wait = NextDeparture - procesadores[procMenorND].popTarea().getArrival();
+            		System.out.println("Trono una sola tarea");
             	}
             
                 //double wait = NextDeparture - procesadores[procMenorND].popTarea().getArrival();
