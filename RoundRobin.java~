@@ -4,7 +4,7 @@ public class RoundRobin extends Broker{
 	
 	public void asignaTarea(Tarea t){
 	
-		for(int i=t.getNum();i>0;i--){
+		for(int i=t.getNum();i>=0;i--){
 			proc= (actual++)%Simulacion.procesadores.length;
 			
 			if(Simulacion.procesadores[proc].isEmpty()){

@@ -92,7 +92,7 @@ public class Simulacion{
 
             // Llegada al sistema
             if (menorNextArrival <= menorNextDeparture) {
-                Tarea t = new Tarea(contador, random.nextInt(numProcesadores), StdRandom.exp(lambda));
+                Tarea t = new Tarea(contador, random.nextInt(numProcesadores)+1, StdRandom.exp(lambda));
                 
                 
                 //System.out.println("Tarea asignada con ID " + t.getId());
@@ -110,14 +110,10 @@ public class Simulacion{
                 
                 
             }
-<<<<<<< HEAD
-            
-            // it's a departure
-=======
 			
 			
             // Salida del sistema
->>>>>>> cd74cd847f97c99727e469c37031bcfb5e022846
+
             else {
                 double wait = menorNextDeparture - procesadores[procMenorND].popTarea().getArrival();
                 //StdOut.printf("Wait = %6.2f, queue size = %d\n", wait, q.size());

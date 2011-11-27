@@ -12,6 +12,22 @@ public class Procesador{
 		nextArrival = Double.POSITIVE_INFINITY;
 		nextDeparture = Double.POSITIVE_INFINITY;
     }
+    
+    public static void sortByQueueSize(){
+    	int i, j=0;
+    	int n = Simulacion.procesadores.length;
+    	Procesador aux = new Procesador();
+    	
+    	for(i=0; i<n; i++){
+			for(j=1; j<(n-1); j++){
+				if(Simulacion.procesadores[j-1].queueSize() > Simulacion.procesadores[j].queueSize()){
+					aux = Simulacion.procesadores[j-1];
+					Simulacion.procesadores[j-1]=Simulacion.procesadores[j];
+					Simulacion.procesadores[j]=aux;					
+				}
+			}
+    	}
+    }
      
     public void pushTarea(Tarea t){
     	q.enqueue(t);
