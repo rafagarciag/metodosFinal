@@ -2,14 +2,13 @@ public class Procesador{
 
 	private boolean ocupado;
     
-    private double nextArrival, nextDeparture;
+    private double  nextDeparture;
     
 	Queue<Tarea> q;
     
 	public Procesador(){
 		ocupado = false;
 		q = new Queue<Tarea>();
-		nextArrival = Double.POSITIVE_INFINITY;
 		nextDeparture = Double.POSITIVE_INFINITY;
     }
      
@@ -33,8 +32,6 @@ public class Procesador{
     	return q.size();
     }
    
-   
-   
 	public void setOcupado(boolean ocupado){
 		this.ocupado = ocupado;
 	}
@@ -42,17 +39,6 @@ public class Procesador{
 	public boolean getOcupado(){	
 		return this.ocupado;
 	}
-	
-	
-	
-	public void setNextArrival(double nextArrival){      
-		this.nextArrival = nextArrival;     
-	}
-	
-	public double getNextArrival(){		
-		return this.nextArrival;
-	}
-	
 	
 	public void setNextDeparture(double nextDeparture){
 		this.nextDeparture = nextDeparture;

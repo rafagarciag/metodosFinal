@@ -7,13 +7,20 @@ public class Simulacion{
 
 	//Numero de iteraciones para la simulacion
 	final static int ITERACIONES = 1000;
+	final static double lambda = 0.027383;
+    final static double mu = 0.05;
 	
 	//Variable que contendra el tipo de broker
 	static Broker broker = null;
 	
 	//Arreglo de procesadores a utilizar
-	public static Procesador [] procesadores; 
+	public static Procesador [] procesadores;
 	
+	public static double NextArrival = Double.POSITIVE_INFINITY;
+    public static double NextDeparture = Double.POSITIVE_INFINITY;
+	
+	
+	static Scanner scan = new Scanner(System.in);
 	//Para seleccionar el broker a utilizar
 	private static void menuBroker(){
 		System.out.println("===============================================================");
@@ -24,7 +31,7 @@ public class Simulacion{
 		System.out.println("3. PARETOFRACTAL");
 		System.out.println("===============================================================");
 		
-		Scanner scan = new Scanner(System.in);
+		
 		int opcion = scan.nextInt();
 		
 		switch(opcion){
@@ -68,35 +75,30 @@ public class Simulacion{
 	    int procMenorNA = 0;
 	    int procMenorND = 0;
 	    
-		double lambda = 0.027383;
-        double mu = 0.05;
         int numProcesadores = procesadores.length;
-
-        double menorNextArrival = Double.POSITIVE_INFINITY;
-        double menorNextDeparture = Double.POSITIVE_INFINITY;
+        
 
         //Inicia simulacion 
         for (int contador=0; contador < ITERACIONES; contador++) {       
+           	System.out.println("Step: "+ contador +"//////////////////////////////////////////////");
+            scan.nextInt();
             
-            System.out.println("Iteracion "+ contador);
+            NextArrival=StdRandom.exp(lambda);
+            NextDeparture = Double.POSITIVE_INFINITY;
             for(int i=0; i<numProcesadores; i++){
-                if (procesadores[i].getNextArrival() < menorNextArrival){
-                    menorNextArrival = procesadores[i].getNextArrival();
-                    procMenorNA = i;
-				}
-                if (procesadores[i].getNextDeparture() < menorNextDeparture){
-                    menorNextDeparture = procesadores[i].getNextDeparture();
+            	System.out.println("nextDep del xcpu: "+procesadores[i].getNextDeparture());
+                if (procesadores[i].getNextDeparture() < NextDeparture){
+                    NextDeparture = procesadores[i].getNextDeparture();
 					procMenorND = i;
 				}
             }
-
+			System.out.println("NextArrival: "+ NextArrival);
+			System.out.println("NextDeparture: "+ NextDeparture);
+			
             // Llegada al sistema
-            if (menorNextArrival <= menorNextDeparture) {
-                Tarea t = new Tarea(contador, random.nextInt(numProcesadores), StdRandom.exp(lambda));
-                
-                
+            if (NextArrival <= NextDeparture) {
+                Tarea t = new Tarea(contador, random.nextInt(numProcesadores)+1, NextArrival);    
                 //System.out.println("Tarea asignada con ID " + t.getId());
-                
                 //Verificar que se cuenta con el numero de procesadores necesarios
                 //para atender la tarea
                 if(t.getNum()<=numProcesadores){
@@ -104,18 +106,39 @@ public class Simulacion{
                 	broker.asignaTarea(t);
                 }
                 else{
-                	
-                }
-                
-                
-                
+                	System.out.println("Tarea excede num de proc.");
+                		
+                }              
             }			
 			
             // Salida del sistema
 
             else {
-                double wait = menorNextDeparture - procesadores[procMenorND].popTarea().getArrival();
+            	double wait=9999999;
+            	if(procesadores[procMenorND].peekTarea().getNum()>1){
+            		int id=procesadores[procMenorND].peekTarea().getId();
+            		int tareasListas=1;
+            		for(int i=0;i<procesadores.length;i++){
+            			if(procesadores[i].peekTarea().getId()==id)
+            				tareasListas++;
+            		}
+            		if(tareasListas>=procesadores[procMenorND].peekTarea().getNum()){
+            		
+            		
+            		}
+            		else{
+            			System.out.println("Esperando a mis compañeritos :3"+id);
+            			procesadores[procMenorND].setNextDeparture(Double.POSITIVE_INFINITY);
+            		}
+            	
+            	
+            	}else{
+            		wait = NextDeparture - procesadores[procMenorND].popTarea().getArrival();
+            	}
+            
+                //double wait = NextDeparture - procesadores[procMenorND].popTarea().getArrival();
                 //StdOut.printf("Wait = %6.2f, queue size = %d\n", wait, q.size());
+                System.out.println("////////////////////////////////////////////////////////////////////////Wait y la verga y asi: "+wait);
                 if (procesadores[procMenorND].isEmpty()){
                 	procesadores[procMenorND].setNextDeparture(Double.POSITIVE_INFINITY);
                 }
@@ -124,6 +147,7 @@ public class Simulacion{
                 }
                 
             }
+            
             
             for(int i = 0; i<numProcesadores; i++){
 				System.out.println("Procesador " + i);
