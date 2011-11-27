@@ -6,7 +6,7 @@ public class Simulacion{
 
 
 	//Numero de iteraciones para la simulacion
-	final static int ITERACIONES = 1000;
+	final static int ITERACIONES = 10000;
 	final static double lambda = 0.027383;
     final static double mu = 0.05;
 	
@@ -77,6 +77,10 @@ public class Simulacion{
 	    
         int numProcesadores = procesadores.length;
         
+        for(int i = 0; i<numProcesadores; i++){
+        	double ta = NextArrival - procesadores[i].getNextDeparture();
+        	procesadores[i].setTa(ta);
+        }
 		NextArrival=StdRandom.exp(lambda);
         //Inicia simulacion 
         for (int contador=0; contador < ITERACIONES; contador++) {       
