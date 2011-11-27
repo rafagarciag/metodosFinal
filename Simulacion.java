@@ -81,7 +81,7 @@ public class Simulacion{
         //Inicia simulacion 
         for (int contador=0; contador < ITERACIONES; contador++) {       
            	System.out.println("Step: "+ contador +"//////////////////////////////////////////////");
-            scan.nextInt();
+            //scan.nextInt();
             
             
             NextDeparture = Double.POSITIVE_INFINITY;
@@ -132,15 +132,20 @@ public class Simulacion{
             				if(!procesadores[i].isEmpty()){
             					if(procesadores[i].peekTarea().getId()==id){
             						procesadores[i].popTarea();
-            						procesadores[i].setNextDeparture(Double.POSITIVE_INFINITY);
+            						if(procesadores[i].isEmpty()){
+            							procesadores[i].setNextDeparture(Double.POSITIVE_INFINITY);
+            						}
+            						else{
+            							procesadores[i].setNextDeparture(StdRandom.exp(mu));
+            						}
             					}
             				}
             			}
             			System.out.println("Trono muchas tareas");
             		}
             		else{
-            			System.out.println("$$$$$$$$$$$$$$$$$$$$$Esperando a mis compañeritos :3"+id);
-            			procesadores[procMenorND].setNextDeparture(Double.POSITIVE_INFINITY);
+            			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$Esperando a mis compañeritos :3"+id);
+            			procesadores[procMenorND].setNextDeparture(procesadores[procMenorND].getNextDeparture()+StdRandom.exp(mu));
             		}
             	}else{
             		
@@ -150,7 +155,7 @@ public class Simulacion{
             
                 //double wait = NextDeparture - procesadores[procMenorND].popTarea().getArrival();
                 //StdOut.printf("Wait = %6.2f, queue size = %d\n", wait, q.size());
-                System.out.println("////////////////////////////////////////////////////////////////////////Wait y la verga y asi: "+wait);
+                System.out.println("#############################Wait y la verga y asi: "+wait);
                 if (procesadores[procMenorND].isEmpty()){
                 	procesadores[procMenorND].setNextDeparture(Double.POSITIVE_INFINITY);
                 }
