@@ -8,7 +8,7 @@ public class List extends Broker{
 			
 			if(Simulacion.procesadores[i].isEmpty()){
 				//Hacer set de departure
-				System.
+				
 			}
 
 				Simulacion.procesadores[i].pushTarea(t);
