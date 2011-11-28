@@ -1,14 +1,16 @@
-import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.Random;
+import java.io.*;
 
 public class Simulacion{
 
 
 	//Numero de iteraciones para la simulacion
-	final static int ITERACIONES = 10000;
+	final static int ITERACIONES = 65535;
 	final static double lambda = 0.027383;
     final static double mu = 0.05;
+	
+	static boolean filasVacias = true;
 	
 	//Variable que contendra el tipo de broker
 	static Broker broker = null;
@@ -19,8 +21,10 @@ public class Simulacion{
 	public static double nextArrival = 0.0;
     public static double nextDeparture = Double.POSITIVE_INFINITY;
 	
+	public static double datosTareas[][] = new double[65535][2];
 	
 	static Scanner scan = new Scanner(System.in);
+	
 	//Para seleccionar el broker a utilizar
 	private static void menuBroker(){
 		System.out.println("===============================================================");
@@ -67,7 +71,27 @@ public class Simulacion{
 	}
 
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException{
+
+		FileReader fr1 = new FileReader("runtime.txt"); 
+		BufferedReader br = new BufferedReader(fr1); 
+		int runtime; 
+		int numTarea = 0;
+		while((runtime = Integer.parseInt(br.readLine())) != -1) { 
+		datosTareas[numTarea][0] =  runtime;
+		numTarea++;
+		} 
+		fr1.close(); 
+	    
+	    FileReader fr2 = new FileReader("nproc.txt"); 
+		BufferedReader br2 = new BufferedReader(fr2); 
+		int nproc; 
+		numTarea = 0;
+		while((nproc = Integer.parseInt(br2.readLine())) != -1) { 
+		datosTareas[nproc][1] =  runtime;
+		numTarea++;
+		} 
+		fr2.close(); 
 	    
 	    menuBroker();
 	    
@@ -82,9 +106,11 @@ public class Simulacion{
         
 		nextArrival+=StdRandom.exp(lambda);
         //Inicia simulacion 
-        for (int contador=0; contador < ITERACIONES; contador++) {   
+        int contador=0;
+        while ((contador < ITERACIONES)||!(filasVacias)) {
+        	filasVacias = lasFilasVacias();
            	System.out.println("Step: "+ contador +"//////////////////////////////////////////////");
-            //scan.nextInt();
+            scan.nextInt();
             
             
             nextDeparture = Double.POSITIVE_INFINITY;
@@ -100,6 +126,7 @@ public class Simulacion{
 
             // Llegada al sistema
             if (nextArrival <= nextDeparture) {
+	            contador++;
                 Tarea t = new Tarea(contador, random.nextInt(numProcesadores)+1, nextArrival);    
                 System.out.println("Tarea asignada con ID " + t.getId());
                 //Verificar que se cuenta con el numero de procesadores necesarios
@@ -200,5 +227,13 @@ public class Simulacion{
        	System.out.println("==========================================");
        	System.out.println("Promedio de tareas en fila: " + (promTareasEnFila/ITERACIONES) / numProcesadores);
 
+    }
+    
+    public static boolean lasFilasVacias(){
+    	for(int i = 0; i<procesadores.length; i++){
+    		if(!(procesadores[i].isEmpty()))
+    			return false;
+    	}
+    	return true;
     }
 }
