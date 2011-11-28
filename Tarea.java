@@ -30,4 +30,8 @@ private double arrival, salidaFila;
 	public void setSalidaFila(Double salidaFila){
 		this.salidaFila = salidaFila;
 	}
+	
+	public double getTiempoEnFila(){
+		return salidaFila-arrival;
+	}
 }

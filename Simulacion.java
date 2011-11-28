@@ -79,6 +79,9 @@ public class Simulacion{
         
         //	Estadísticos y acumulados
         double promTareasEnFila = 0.0;
+        double promTiempoSistema = 0.0;
+        int numTareas = 0;
+        double makespan = 0.0;
         
 		nextArrival+=StdRandom.exp(lambda);
         //Inicia simulacion 
@@ -97,7 +100,7 @@ public class Simulacion{
             }
 			System.out.println("nextArrival: "+ nextArrival);
 			System.out.println("nextDeparture: "+ nextDeparture);
-
+			
             // Llegada al sistema
             if (nextArrival <= nextDeparture) {
                 Tarea t = new Tarea(contador, random.nextInt(numProcesadores)+1, nextArrival);    
@@ -113,7 +116,7 @@ public class Simulacion{
         			else{
         			ta = nextArrival - procesadores[i].getTareaEnEjecucion().getSalidaFila();}
         			procesadores[i].setTa(ta);
-        		}
+				}
                 
                 if(t.getNum()<=numProcesadores){
                 	//Asignar tarea a un procesador
@@ -147,6 +150,10 @@ public class Simulacion{
             					if(procesadores[i].peekTarea().getId()==id){
             						procesadores[i].setTareaEnEjecucion(procesadores[i].popTarea());
             						procesadores[i].getTareaEnEjecucion().setSalidaFila(nextDeparture);
+            						numTareas++;
+            						promTiempoSistema += procesadores[i].getTareaEnEjecucion().getTiempoEnFila();
+            						System.out.println("Tiempo en fila = " + promTiempoSistema);
+            						
             						if(procesadores[i].isEmpty()){
             							procesadores[i].setNextDeparture(Double.POSITIVE_INFINITY);
             						}
@@ -159,12 +166,15 @@ public class Simulacion{
             			//System.out.println("Trono muchas tareas");
             		}
             		else{
-
             			procesadores[procMenorND].setNextDeparture(procesadores[procMenorND].getNextDeparture()+StdRandom.exp(mu));
             		}
-            	}else{
-            		
-            		wait = nextDeparture - procesadores[procMenorND].popTarea().getArrival();
+            	}
+            	else{
+            		procesadores[procMenorND].setTareaEnEjecucion(procesadores[procMenorND].popTarea());
+            		procesadores[procMenorND].getTareaEnEjecucion().setSalidaFila(nextDeparture);
+            		numTareas++;
+            		promTiempoSistema += procesadores[procMenorND].getTareaEnEjecucion().getTiempoEnFila();
+            		System.out.println("Tiempo en fila del ELSE = " + promTiempoSistema);
             		if (procesadores[procMenorND].isEmpty()){
 		            	procesadores[procMenorND].setNextDeparture(Double.POSITIVE_INFINITY);
 		            }
@@ -199,6 +209,7 @@ public class Simulacion{
         System.out.println("Desempeño de la estrategia de scheduling ");
        	System.out.println("==========================================");
        	System.out.println("Promedio de tareas en fila: " + (promTareasEnFila/ITERACIONES) / numProcesadores);
+       	System.out.println("Promedio de tiempo en sistema: " + (promTiempoSistema/numTareas));
 
     }
 }
