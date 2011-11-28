@@ -7,10 +7,10 @@ public class Pareto extends Broker{
 			
 			if(Simulacion.procesadores[i].isEmpty()){
 				//Hacer set de departure
-				Simulacion.procesadores[i].setNextDeparture(StdRandom.exp(Simulacion.mu));
+				Simulacion.procesadores[i].setNextDeparture(Simulacion.nextArrival + StdRandom.exp(Simulacion.mu));
 			}
 				Simulacion.procesadores[i].pushTarea(t);
-				System.out.println("Se metio la tarea al Proc: "+i);
+				//System.out.println("Se metio la tarea al Proc: "+i);
 		}
 		
 	}

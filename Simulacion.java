@@ -8,7 +8,7 @@ public class Simulacion{
 	//Numero de iteraciones para la simulacion
 	final static int ITERACIONES = 10000;
 	final static double lambda = 0.027383;
-    final static double mu = 0.05;
+    final static double mu = 0.01;
 	
 	//Variable que contendra el tipo de broker
 	static Broker broker = null;
@@ -16,8 +16,8 @@ public class Simulacion{
 	//Arreglo de procesadores a utilizar
 	public static Procesador [] procesadores;
 	
-	public static double NextArrival = Double.POSITIVE_INFINITY;
-    public static double NextDeparture = Double.POSITIVE_INFINITY;
+	public static double nextArrival = 0.0;
+    public static double nextDeparture = Double.POSITIVE_INFINITY;
 	
 	
 	static Scanner scan = new Scanner(System.in);
@@ -77,32 +77,35 @@ public class Simulacion{
 	    
         int numProcesadores = procesadores.length;
         
+        //	Estadísticos y acumulados
+        double promTareasEnFila = 0.0;
+        
         for(int i = 0; i<numProcesadores; i++){
-        	double ta = NextArrival - procesadores[i].getNextDeparture();
+        	double ta = nextArrival - procesadores[i].getNextDeparture();
         	procesadores[i].setTa(ta);
         }
-		NextArrival=StdRandom.exp(lambda);
+		nextArrival+=StdRandom.exp(lambda);
         //Inicia simulacion 
-        for (int contador=0; contador < ITERACIONES; contador++) {       
+        for (int contador=0; contador < ITERACIONES; contador++) {   
            	System.out.println("Step: "+ contador +"//////////////////////////////////////////////");
-            //scan.nextInt();
+            scan.nextInt();
             
             
-            NextDeparture = Double.POSITIVE_INFINITY;
+            nextDeparture = Double.POSITIVE_INFINITY;
             for(int i=0; i<numProcesadores; i++){
-            	System.out.println("nextDep del xcpu: "+procesadores[i].getNextDeparture());
-                if (procesadores[i].getNextDeparture() < NextDeparture){
-                    NextDeparture = procesadores[i].getNextDeparture();
+            	//System.out.println("nextDep del xcpu: "+procesadores[i].getNextDeparture());
+                if (procesadores[i].getNextDeparture() < nextDeparture){
+                    nextDeparture = procesadores[i].getNextDeparture();
 					procMenorND = i;
 				}
             }
-			System.out.println("NextArrival: "+ NextArrival);
-			System.out.println("NextDeparture: "+ NextDeparture);
-			
+			System.out.println("nextArrival: "+ nextArrival);
+			System.out.println("nextDeparture: "+ nextDeparture);
+
             // Llegada al sistema
-            if (NextArrival <= NextDeparture) {
-                Tarea t = new Tarea(contador, random.nextInt(numProcesadores)+1, NextArrival);    
-                //System.out.println("Tarea asignada con ID " + t.getId());
+            if (nextArrival <= nextDeparture) {
+                Tarea t = new Tarea(contador, random.nextInt(numProcesadores)+1, nextArrival);    
+                System.out.println("Tarea asignada con ID " + t.getId());
                 //Verificar que se cuenta con el numero de procesadores necesarios
                 //para atender la tarea
                 if(t.getNum()<=numProcesadores){
@@ -114,7 +117,7 @@ public class Simulacion{
                 	System.out.println("Tarea excede num de proc.");
                 		
                 }
-                NextArrival=StdRandom.exp(lambda);
+                nextArrival+=StdRandom.exp(lambda);
             }			
 
 			
@@ -140,32 +143,33 @@ public class Simulacion{
             							procesadores[i].setNextDeparture(Double.POSITIVE_INFINITY);
             						}
             						else{
-            							procesadores[i].setNextDeparture(StdRandom.exp(mu));
+            							procesadores[i].setNextDeparture(nextArrival + StdRandom.exp(mu));
             						}
             					}
             				}
             			}
-            			System.out.println("Trono muchas tareas");
+            			//System.out.println("Trono muchas tareas");
             		}
             		else{
-            			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$Esperando a mis compañeritos :3"+id);
+
             			procesadores[procMenorND].setNextDeparture(procesadores[procMenorND].getNextDeparture()+StdRandom.exp(mu));
             		}
             	}else{
             		
-            		wait = NextDeparture - procesadores[procMenorND].popTarea().getArrival();
-            		System.out.println("Trono una sola tarea");
+            		wait = nextDeparture - procesadores[procMenorND].popTarea().getArrival();
+            		if (procesadores[procMenorND].isEmpty()){
+		            	procesadores[procMenorND].setNextDeparture(Double.POSITIVE_INFINITY);
+		            }
+		            else{
+		            	procesadores[procMenorND].setNextDeparture(procesadores[procMenorND].getNextDeparture() + StdRandom.exp(mu) );
+		            }
+         
             	}
             
-                //double wait = NextDeparture - procesadores[procMenorND].popTarea().getArrival();
+                //double wait = nextDeparture - procesadores[procMenorND].popTarea().getArrival();
                 //StdOut.printf("Wait = %6.2f, queue size = %d\n", wait, q.size());
-                System.out.println("#############################Wait y la verga y asi: "+wait);
-                if (procesadores[procMenorND].isEmpty()){
-                	procesadores[procMenorND].setNextDeparture(Double.POSITIVE_INFINITY);
-                }
-                else{
-                	procesadores[procMenorND].setNextDeparture(procesadores[procMenorND].getNextDeparture() + StdRandom.exp(mu) );
-                }
+
+                
                 
             }
             
@@ -173,9 +177,20 @@ public class Simulacion{
             for(int i = 0; i<numProcesadores; i++){
 				System.out.println("Procesador " + i);
 				System.out.println("\tTamaño de fila " + procesadores[i].queueSize());
+				promTareasEnFila+=procesadores[i].queueSize();
 			}
 
         }
+        
+        for(int i = 0; i<numProcesadores; i++){
+			System.out.println("Procesador " + i);
+			System.out.println("\tTamaño de fila " + procesadores[i].queueSize());
+				
+		}
+        System.out.println("==========================================");
+        System.out.println("Desempeño de la estrategia de scheduling ");
+       	System.out.println("==========================================");
+       	System.out.println("Promedio de tareas en fila: " + (promTareasEnFila/ITERACIONES) / numProcesadores);
 
     }
 }
