@@ -8,7 +8,7 @@ public class Simulacion{
 	//Numero de iteraciones para la simulacion
 	final static int ITERACIONES = 10000;
 	final static double lambda = 0.027383;
-    final static double mu = 0.01;
+    final static double mu = 0.05;
 	
 	//Variable que contendra el tipo de broker
 	static Broker broker = null;
@@ -80,15 +80,11 @@ public class Simulacion{
         //	Estadísticos y acumulados
         double promTareasEnFila = 0.0;
         
-        for(int i = 0; i<numProcesadores; i++){
-        	double ta = nextArrival - procesadores[i].getNextDeparture();
-        	procesadores[i].setTa(ta);
-        }
 		nextArrival+=StdRandom.exp(lambda);
         //Inicia simulacion 
         for (int contador=0; contador < ITERACIONES; contador++) {   
            	System.out.println("Step: "+ contador +"//////////////////////////////////////////////");
-            scan.nextInt();
+            //scan.nextInt();
             
             
             nextDeparture = Double.POSITIVE_INFINITY;
@@ -108,6 +104,17 @@ public class Simulacion{
                 System.out.println("Tarea asignada con ID " + t.getId());
                 //Verificar que se cuenta con el numero de procesadores necesarios
                 //para atender la tarea
+                
+                for(int i = 0; i<numProcesadores; i++){
+        			double ta;
+        			if(procesadores[i].getTareaEnEjecucion() == null){
+        			ta = 0;
+        			}
+        			else{
+        			ta = nextArrival - procesadores[i].getTareaEnEjecucion().getSalidaFila();}
+        			procesadores[i].setTa(ta);
+        		}
+                
                 if(t.getNum()<=numProcesadores){
                 	//Asignar tarea a un procesador
                 	broker.asignaTarea(t);
@@ -138,7 +145,8 @@ public class Simulacion{
             			for(int i=0;i<procesadores.length;i++){
             				if(!procesadores[i].isEmpty()){
             					if(procesadores[i].peekTarea().getId()==id){
-            						procesadores[i].popTarea();
+            						procesadores[i].setTareaEnEjecucion(procesadores[i].popTarea());
+            						procesadores[i].getTareaEnEjecucion().setSalidaFila(nextDeparture);
             						if(procesadores[i].isEmpty()){
             							procesadores[i].setNextDeparture(Double.POSITIVE_INFINITY);
             						}

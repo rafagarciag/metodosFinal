@@ -8,7 +8,6 @@ private double arrival, salidaFila;
 		this.id=id;
 		this.num=num;
 		this.arrival=arrival;
-		this.salidaFila = 0;
 	}
 	
 	public int getId(){

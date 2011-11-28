@@ -6,6 +6,8 @@ public class Procesador{
     
     private double  nextDeparture;
     
+    private Tarea tareaEnEjecucion;
+    
 	Queue<Tarea> q;
 	
 	//	===================================
@@ -37,6 +39,7 @@ public class Procesador{
 		ocupado = false;
 		q = new Queue<Tarea>();
 		nextDeparture = Double.POSITIVE_INFINITY;
+		tareaEnEjecucion = null;
     }
 
     public double paretoParam(){
@@ -125,10 +128,17 @@ public class Procesador{
 	}
 	
 	public double getTa(){
-		return this.ta;
+		return ta;
 	}
 	
-	public void setTa(double NuevoTa){
+	public void setTa(double ta){
 		this.ta = ta;
+	}
+		public Tarea getTareaEnEjecucion(){
+		return tareaEnEjecucion;
+	}
+	
+	public void setTareaEnEjecucion(Tarea tareaEnEjecucion){
+		this.tareaEnEjecucion = tareaEnEjecucion;
 	}
 }
