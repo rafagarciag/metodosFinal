@@ -78,8 +78,8 @@ public class Simulacion{
 		int runtime; 
 		int numTarea = 0;
 		while((runtime = Integer.parseInt(br.readLine())) != -1) { 
-		datosTareas[numTarea][0] =  runtime;
-		numTarea++;
+			datosTareas[numTarea][0] =  runtime;
+			numTarea++;
 		} 
 		fr1.close(); 
 	    
@@ -88,8 +88,8 @@ public class Simulacion{
 		int nproc; 
 		numTarea = 0;
 		while((nproc = Integer.parseInt(br2.readLine())) != -1) { 
-		datosTareas[nproc][1] =  runtime;
-		numTarea++;
+			datosTareas[nproc][1] =  runtime;
+			numTarea++;
 		} 
 		fr2.close(); 
 	    
