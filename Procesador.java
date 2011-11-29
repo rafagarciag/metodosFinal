@@ -4,7 +4,7 @@ public class Procesador{
 
 	private boolean ocupado;
     
-    private double nextDeparture;
+    private double  nextDeparture;
     
     private Tarea tareaEnEjecucion;
     
@@ -140,13 +140,5 @@ public class Procesador{
 	
 	public void setTareaEnEjecucion(Tarea tareaEnEjecucion){
 		this.tareaEnEjecucion = tareaEnEjecucion;
-	}
-	
-	public double getDuracionTE(){
-		if(tareaEnEjecucion==null)
-			return 0;
-		else
-			return tareaEnEjecucion.getDuracion();
-		
 	}
 }
