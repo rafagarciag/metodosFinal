@@ -113,7 +113,7 @@ public class Simulacion{
         while ((contador < ITERACIONES)||!(filasVacias)) {
         	filasVacias = lasFilasVacias();
            	System.out.println("Step: "+ contador +"//////////////////////////////////////////////");
-            scan.nextInt();
+            //scan.nextInt();
             
             
             nextDeparture = Double.POSITIVE_INFINITY;
