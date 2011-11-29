@@ -7,7 +7,7 @@ public class List extends Broker{
         for(int i=0; i<t.getNum(); i++){
 			
 			if(Simulacion.procesadores[i].isEmpty()){
-				Simulacion.procesadores[i].setNextDeparture(Simulacion.nextArrival + StdRandom.exp(Simulacion.mu));			
+				Simulacion.procesadores[i].setNextDeparture(Simulacion.nextArrival + Simulacion.procesadores[i].getDuracionTE());			
 			}
 
 				Simulacion.procesadores[i].pushTarea(t);

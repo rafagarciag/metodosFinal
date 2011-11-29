@@ -78,8 +78,8 @@ public class Simulacion{
 		int runtime; 
 		int numTarea = 0;
 		while((runtime = Integer.parseInt(br.readLine())) != -1) { 
-		datosTareas[numTarea][0] =  runtime;
-		numTarea++;
+			datosTareas[numTarea][0] =  runtime;
+			numTarea++;
 		} 
 		fr1.close(); 
 	    
@@ -88,8 +88,8 @@ public class Simulacion{
 		int nproc; 
 		numTarea = 0;
 		while((nproc = Integer.parseInt(br2.readLine())) != -1) { 
-		datosTareas[nproc][1] =  runtime;
-		numTarea++;
+			datosTareas[numTarea][1] =  nproc;
+			numTarea++;
 		} 
 		fr2.close(); 
 	    
@@ -109,11 +109,21 @@ public class Simulacion{
         
 		nextArrival+=StdRandom.exp(lambda);
         //Inicia simulacion 
+        
+       // for(int i=0;i<datosTareas.length;i++){
+       // 	System.out.println("numProc: " + datosTareas[i][1] + " Duracion: "+ datosTareas[i][0]); 
+       //}
+        
         int contador=0;
         while ((contador < ITERACIONES)||!(filasVacias)) {
+        	for(int i =0; i<procesadores.length;i++){
+        		if((procesadores[i].getTareaEnEjecucion() != null) && (nextArrival>procesadores[i].getTareaEnEjecucion().getSalidaFila()+procesadores[i].getDuracionTE()))
+        			procesadores[i].setTareaEnEjecucion(null);
+        	}
+        	
         	filasVacias = lasFilasVacias();
            	System.out.println("Step: "+ contador +"//////////////////////////////////////////////");
-            scan.nextInt();
+            //scan.nextInt();
             
             
             nextDeparture = Double.POSITIVE_INFINITY;
@@ -129,8 +139,8 @@ public class Simulacion{
 			
             // Llegada al sistema
             if (nextArrival <= nextDeparture) {
-	            contador++;
-                Tarea t = new Tarea(contador, random.nextInt(numProcesadores)+1, nextArrival);    
+                Tarea t = new Tarea(contador, datosTareas[contador][1], datosTareas[contador][0], nextArrival);    
+                contador++;
                 System.out.println("Tarea asignada con ID " + t.getId());
                 //Verificar que se cuenta con el numero de procesadores necesarios
                 //para atender la tarea
@@ -185,7 +195,7 @@ public class Simulacion{
             							procesadores[i].setNextDeparture(Double.POSITIVE_INFINITY);
             						}
             						else{
-            							procesadores[i].setNextDeparture(nextArrival + StdRandom.exp(mu));
+            							procesadores[i].setNextDeparture(nextArrival + procesadores[i].getDuracionTE());
             						}
             					}
             				}
@@ -193,7 +203,7 @@ public class Simulacion{
             			//System.out.println("Trono muchas tareas");
             		}
             		else{
-            			procesadores[procMenorND].setNextDeparture(procesadores[procMenorND].getNextDeparture()+StdRandom.exp(mu));
+            			procesadores[procMenorND].setNextDeparture(procesadores[procMenorND].getNextDeparture() + procesadores[procMenorND].getDuracionTE());
             		}
             	}
             	else{
@@ -206,7 +216,7 @@ public class Simulacion{
 		            	procesadores[procMenorND].setNextDeparture(Double.POSITIVE_INFINITY);
 		            }
 		            else{
-		            	procesadores[procMenorND].setNextDeparture(procesadores[procMenorND].getNextDeparture() + StdRandom.exp(mu) );
+		            	procesadores[procMenorND].setNextDeparture(procesadores[procMenorND].getNextDeparture() + procesadores[procMenorND].getDuracionTE() );
 		            }
          
             	}

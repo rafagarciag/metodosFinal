@@ -1,12 +1,14 @@
 public class Tarea {
 
 private int id;
-private int num;
+private double num;
 private double arrival, salidaFila;
+private double duracion;
 
-	public Tarea(int id, int num, double arrival){
+	public Tarea(int id, double num, double duracion,  double arrival){
 		this.id=id;
 		this.num=num;
+		this.duracion=duracion;
 		this.arrival=arrival;
 		this.salidaFila = 0;
 	}
@@ -15,7 +17,7 @@ private double arrival, salidaFila;
 		return id;
 	}
 
-	public int getNum(){
+	public double getNum(){
 		return num;
 	}
 	
@@ -33,5 +35,9 @@ private double arrival, salidaFila;
 	
 	public double getTiempoEnFila(){
 		return salidaFila-arrival;
+	}
+	
+	public double getDuracion(){
+		return duracion;
 	}
 }
