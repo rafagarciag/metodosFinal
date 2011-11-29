@@ -8,15 +8,11 @@ public class RoundRobin extends Broker{
 			proc= (actual++)%Simulacion.procesadores.length;
 			
 			if(Simulacion.procesadores[proc].isEmpty()){
-<<<<<<< HEAD
-				//Hacer set de departure
-=======
-				Simulacion.procesadores[proc].setNextDeparture(StdRandom.exp(Simulacion.mu));
->>>>>>> 3ca5e13a96d50efd64b9e6a9adfe54b9bc255e15
+				Simulacion.procesadores[proc].setNextDeparture(Simulacion.nextArrival + Simulacion.procesadores[i].getDuracionTE());
 			}
 			
 			Simulacion.procesadores[proc].pushTarea(t);
-			System.out.println("Se metio la tarea al Proc: "+proc);
+			//System.out.println("Se metio la tarea al Proc: "+proc);
 		}
 		
 	}
