@@ -186,6 +186,9 @@ public class Simulacion{
             					if(procesadores[i].peekTarea().getId()==id){
             						procesadores[i].setTareaEnEjecucion(procesadores[i].popTarea());
             						procesadores[i].setContando(false);
+            						if (procesadores[i].getTiempoFila()>makespan){
+            							makespan = procesadores[i].getTiempoFila();
+            						}
             						procesadores[i].getTareaEnEjecucion().setSalidaFila(nextDeparture);
             						numTareas++;
             						promTiempoSistema += procesadores[i].getTareaEnEjecucion().getTiempoEnFila();
@@ -212,6 +215,9 @@ public class Simulacion{
             	else{
             		procesadores[procMenorND].setTareaEnEjecucion(procesadores[procMenorND].popTarea());
             		procesadores[procMenorND].setContando(false);
+            		if (procesadores[procMenorND].getTiempoFila()>makespan){
+            			makespan = procesadores[procMenorND].getTiempoFila();
+            		}
             		procesadores[procMenorND].getTareaEnEjecucion().setSalidaFila(nextDeparture);
             		numTareas++;
             		promTiempoSistema += procesadores[procMenorND].getTareaEnEjecucion().getTiempoEnFila();
@@ -252,7 +258,7 @@ public class Simulacion{
        	System.out.println("==========================================");
        	System.out.println("Promedio de tareas en fila: " + (promTareasEnFila/ITERACIONES) / numProcesadores);
        	System.out.println("Promedio de tiempo en sistema: " + (promTiempoSistema/numTareas));
-
+		System.out.println("Makespan: " + makespan/3600 + " horas");
     }
     
     public static boolean lasFilasVacias(){
