@@ -10,6 +10,9 @@ public class Procesador{
     
 	Queue<Tarea> q;
 	
+	private double tiempoFila;
+	private boolean contando = false;
+	
 	//	===================================
 	//	Parametros para pareto-fractal
 	//	===================================
@@ -140,5 +143,21 @@ public class Procesador{
 	
 	public void setTareaEnEjecucion(Tarea tareaEnEjecucion){
 		this.tareaEnEjecucion = tareaEnEjecucion;
+	}
+	
+	public double getTiempoFila(){
+		return tiempoFila;
+	}
+	
+	public void setTiempoFila(double t){
+		tiempoFila = t;
+	}
+	
+	public boolean getContando(){
+		return contando;
+	}
+	
+	public void setContando(boolean contando){
+		this.contando = contando;
 	}
 }
